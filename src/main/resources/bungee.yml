@@ -1,0 +1,4 @@
+name: Messages-API
+main: com.gotofinal.messages.main.bungee.MessagesAPI
+author: GotoFinal
+version: 1.0
