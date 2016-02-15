@@ -1,4 +1,4 @@
 name: Messages-API
 main: com.gotofinal.messages.main.bukkit.MessagesAPI
 author: GotoFinal
-version: 1.0
+version: ${api.version}
