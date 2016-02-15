@@ -32,8 +32,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.gotofinal.messages.api.chat.ChatColor;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -237,31 +235,6 @@ public class TranslatableComponent extends BaseComponent
         }
         component.setParent(this);
         this.with.add(component);
-    }
-
-    private void addFormat(final StringBuilder builder)
-    {
-        builder.append(this.getColor());
-        if (this.isBold())
-        {
-            builder.append(ChatColor.BOLD);
-        }
-        if (this.isItalic())
-        {
-            builder.append(ChatColor.ITALIC);
-        }
-        if (this.isUnderlined())
-        {
-            builder.append(ChatColor.UNDERLINE);
-        }
-        if (this.isStrikethrough())
-        {
-            builder.append(ChatColor.STRIKETHROUGH);
-        }
-        if (this.isObfuscated())
-        {
-            builder.append(ChatColor.MAGIC);
-        }
     }
 
     @Override

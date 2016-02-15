@@ -27,6 +27,8 @@ package com.gotofinal.messages.api.messages;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import com.gotofinal.messages.api.MessageReceiver;
 import com.gotofinal.messages.api.MessagesAPI;
@@ -38,13 +40,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Messages
 {
-    private final MessagesAPI api;
-
-    private final char nodeSeparator; // '.' by default
-
-    private final Messages              parentNode;
-    private final Map<String, Message>  messages;
-    private final Map<String, Messages> nodes;
+    /**
+     * Instance of api that owns this messages instance.
+     */
+    protected final MessagesAPI           api;
+    /**
+     * Used in get/set method to separate nodes.
+     */
+    protected final char                  nodeSeparator; // '.' by default
+    private final   Messages              parentNode;
+    private final   Map<String, Message>  messages;
+    private final   Map<String, Messages> nodes;
 
     private Messages(final MessagesAPI api, final char nodeSeparator, final Messages parentNode, final Map<String, Message> messages, final Map<String, Messages> nodes)
     {
@@ -402,6 +408,77 @@ public class Messages
     {
         final Message message = this.getMessage(path);
         return (message != null) && message.sendMessage(target, target.getPreferredLocale(), data);
+    }
+
+    /**
+     * Serialize all messages to given map, all base components are serialized to json string.
+     *
+     * @param map             map where all messages will be added.
+     * @param defaultLanguage default locale of messages.
+     *
+     * @return this same map as given.
+     *
+     * @see BaseComponent#canBeLegacy()
+     */
+    @SuppressWarnings("unchecked")
+    public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage)
+    {
+        for (final Entry<String, Message> entry : this.messages.entrySet())
+        {
+            final String key = entry.getKey();
+            final Message message = entry.getValue();
+
+            final Map<Locale, Map<String, Object>> messageValues = message.toMap(new HashMap<>(this.api.getLanguages().length), defaultLanguage, key);
+            for (final Entry<Locale, Map<String, Object>> localeMapEntry : messageValues.entrySet())
+            {
+                final Locale locale = localeMapEntry.getKey();
+                final Map<String, Object> valueMap = localeMapEntry.getValue();
+
+                Map<String, Object> targetMap = map.get(locale);
+                if (targetMap == null)
+                {
+                    targetMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                    map.put(locale, targetMap);
+                }
+                targetMap.putAll(valueMap);
+            }
+        }
+        for (final Entry<String, Messages> entry : this.nodes.entrySet())
+        {
+            final String key = entry.getKey();
+            final Messages messages = entry.getValue();
+
+            final Map<Locale, Map<String, Object>> messageValues = messages.toMap(new HashMap<>(this.api.getLanguages().length), defaultLanguage);
+            for (final Entry<Locale, Map<String, Object>> localeMapEntry : messageValues.entrySet())
+            {
+                final Locale locale = localeMapEntry.getKey();
+                final Map<String, Object> valueMap = localeMapEntry.getValue();
+
+                Map<String, Object> nestedMap = map.get(locale);
+                if (nestedMap == null)
+                {
+                    nestedMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                    map.put(locale, nestedMap);
+                }
+                final Object tmp = nestedMap.get(key);
+                if ((tmp != null) && ! (tmp instanceof Map))
+                {
+                    throw new RuntimeException("Duplicated node and message for key: " + key + ": " + tmp);
+                }
+                final Map<String, Object> targetMap;
+                if (tmp == null)
+                {
+                    targetMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                    nestedMap.put(key, targetMap);
+                }
+                else
+                {
+                    targetMap = (Map<String, Object>) tmp;
+                }
+                targetMap.putAll(valueMap);
+            }
+        }
+        return map;
     }
 
     /**

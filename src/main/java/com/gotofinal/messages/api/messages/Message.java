@@ -24,15 +24,18 @@
 
 package com.gotofinal.messages.api.messages;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.TreeMap;
 
 import com.gotofinal.messages.api.MessageReceiver;
 import com.gotofinal.messages.api.MessagesAPI;
+import com.gotofinal.messages.api.chat.ChatColor;
 import com.gotofinal.messages.api.chat.component.BaseComponent;
 import com.gotofinal.messages.api.chat.component.serialize.ComponentSerializer;
 import com.gotofinal.messages.api.chat.placeholder.PlaceholderData;
@@ -174,6 +177,19 @@ public abstract class Message
      * @return BaseComponent to send or null if disabled.
      */
     public abstract BaseComponent get(Locale lang, MessageData... data);
+
+    /**
+     * Serialize all messages to given map, all base components are serialized to json string.
+     *
+     * @param map             map where all messages will be added.
+     * @param defaultLanguage default locale of messages.
+     * @param node            name for this message.
+     *
+     * @return this same mas as given.
+     *
+     * @see BaseComponent#canBeLegacy()
+     */
+    public abstract Map<Locale, Map<String, Object>> toMap(Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node);
 
 //    /**
 //     * Get BaseComponent to send, may return null if message is disabled.
@@ -499,6 +515,19 @@ public abstract class Message
         }
 
         @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            Map<String, Object> msgMap = map.get(defaultLanguage);
+            if (msgMap == null)
+            {
+                msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                map.put(defaultLanguage, msgMap);
+            }
+            msgMap.put(node, this.msg.canBeLegacy() ? this.msg.toLegacyText() : ComponentSerializer.toString(this.msg));
+            return map;
+        }
+
+        @Override
         public String toString()
         {
             if (this.msg == null)
@@ -527,6 +556,24 @@ public abstract class Message
                 return null;
             }
             return replace(this.msg[random.nextInt(this.msg.length)], this.placeholders, data);
+        }
+
+        @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            Map<String, Object> msgMap = map.get(defaultLanguage);
+            if (msgMap == null)
+            {
+                msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                map.put(defaultLanguage, msgMap);
+            }
+            final Collection<String> list = new ArrayList<>(this.msg.length);
+            for (final BaseComponent component : this.msg)
+            {
+                list.add(component.canBeLegacy() ? ChatColor.removeColorCodesInString('&', component.toLegacyText()) : ComponentSerializer.toString(component));
+            }
+            msgMap.put(node, list);
+            return map;
         }
 
         @Override
@@ -581,6 +628,12 @@ public abstract class Message
                 return null;
             }
             return replace(selected, this.placeholders, data);
+        }
+
+        @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            return Message.toMap1(this.msg, map, node);
         }
 
         @Override
@@ -648,6 +701,12 @@ public abstract class Message
                 return null;
             }
             return replace(selected[random.nextInt(selected.length)], this.placeholders, data);
+        }
+
+        @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            return Message.toMap2(this.msg, map, node);
         }
 
         @Override
@@ -738,6 +797,14 @@ public abstract class Message
         }
 
         @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            Message.toMap1(this.msg1, map, node);
+            Message.toMap2(this.msg2, map, node);
+            return map;
+        }
+
+        @Override
         public String toString()
         {
             if ((this.msg1 == null) || this.msg1.isEmpty())
@@ -760,5 +827,44 @@ public abstract class Message
             }
             return msg.toPlainText();
         }
+    }
+
+    private static Map<Locale, Map<String, Object>> toMap1(final Map<Locale, BaseComponent> source, final Map<Locale, Map<String, Object>> map, final String node)
+    {
+        for (final Entry<Locale, BaseComponent> entry : source.entrySet())
+        {
+            final Locale locale = entry.getKey();
+            final BaseComponent msg = entry.getValue();
+            Map<String, Object> msgMap = map.get(locale);
+            if (msgMap == null)
+            {
+                msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                map.put(locale, msgMap);
+            }
+            msgMap.put(node, msg.canBeLegacy() ? msg.toLegacyText() : ComponentSerializer.toString(msg));
+        }
+        return map;
+    }
+
+    private static Map<Locale, Map<String, Object>> toMap2(final Map<Locale, BaseComponent[]> source, final Map<Locale, Map<String, Object>> map, final String node)
+    {
+        for (final Entry<Locale, BaseComponent[]> entry : source.entrySet())
+        {
+            final Locale locale = entry.getKey();
+            final BaseComponent[] msgs = entry.getValue();
+            Map<String, Object> msgMap = map.get(locale);
+            if (msgMap == null)
+            {
+                msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                map.put(locale, msgMap);
+            }
+            final Collection<String> list = new ArrayList<>(msgs.length);
+            for (final BaseComponent component : msgs)
+            {
+                list.add(component.canBeLegacy() ? ChatColor.removeColorCodesInString('&', component.toLegacyText()) : ComponentSerializer.toString(component));
+            }
+            msgMap.put(node, list);
+        }
+        return map;
     }
 }

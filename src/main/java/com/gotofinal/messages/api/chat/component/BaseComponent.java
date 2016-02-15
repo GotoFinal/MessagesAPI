@@ -41,31 +41,31 @@ public abstract class BaseComponent extends ReplacableComponent
     /**
      * parent node of this node.
      */
-    protected BaseComponent parent;
+    protected BaseComponent       parent;
     /**
      * color of component, var may be null.
      */
-    protected ChatColor     color;
+    protected ChatColor           color;
     /**
      * if component use bold style, may be null.
      */
-    protected Boolean       bold;
+    protected Boolean             bold;
     /**
      * if component use italic style, may be null.
      */
-    protected Boolean       italic;
+    protected Boolean             italic;
     /**
      * if component use underlined style, may be null.
      */
-    protected Boolean       underlined;
+    protected Boolean             underlined;
     /**
      * if component use strikethrough style, may be null.
      */
-    protected Boolean       strikethrough;
+    protected Boolean             strikethrough;
     /**
      * if component use obfuscated style, may be null.
      */
-    protected Boolean       obfuscated;
+    protected Boolean             obfuscated;
     /**
      * extra/next elements appended after this element.
      */
@@ -106,6 +106,37 @@ public abstract class BaseComponent extends ReplacableComponent
      */
     public BaseComponent()
     {
+    }
+
+    /**
+     * Returns true if this base component can be changed to legacy string without removing any features. <br>
+     * Method just check if this component use any events that can't be used in legacy chat format.
+     *
+     * @return true if this base component can be changed to legacy string without removing any features.
+     */
+    public boolean canBeLegacy()
+    {
+        if (this.clickEvent != null)
+        {
+            return false;
+        }
+        if (this.hoverEvent != null)
+        {
+            return false;
+        }
+        final List<BaseComponent> extra = this.extra;
+        if ((extra == null) || extra.isEmpty())
+        {
+            return true;
+        }
+        for (final BaseComponent component : extra)
+        {
+            if (! component.canBeLegacy())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -553,6 +584,40 @@ public abstract class BaseComponent extends ReplacableComponent
             {
                 e.toLegacyText(builder);
             }
+        }
+    }
+
+    /**
+     * Adds color codes of this element to given string builder.
+     *
+     * @param builder string builder to be used.
+     */
+    protected void addFormat(final StringBuilder builder)
+    {
+        final ChatColor color = this.color;
+        if (color != null)
+        {
+            builder.append(color);
+        }
+        if (this.isBold())
+        {
+            builder.append(ChatColor.BOLD);
+        }
+        if (this.isItalic())
+        {
+            builder.append(ChatColor.ITALIC);
+        }
+        if (this.isUnderlined())
+        {
+            builder.append(ChatColor.UNDERLINE);
+        }
+        if (this.isStrikethrough())
+        {
+            builder.append(ChatColor.STRIKETHROUGH);
+        }
+        if (this.isObfuscated())
+        {
+            builder.append(ChatColor.MAGIC);
         }
     }
 
