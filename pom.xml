@@ -18,6 +18,17 @@
         <diorite.version>indev-0.0.2-SNAPSHOT</diorite.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>diorite-releases</id>
+            <url>http://diorite.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>diorite-snapshots</id>
+            <url>http://diorite.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
