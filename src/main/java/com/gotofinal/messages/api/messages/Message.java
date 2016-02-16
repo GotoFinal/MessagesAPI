@@ -64,7 +64,7 @@ public abstract class Message
     /**
      * Construct new message with given placeholders.
      *
-     * @param api
+     * @param api          instance of api that owns this message.
      * @param placeholders placeholders used in this message.
      */
     protected Message(final MessagesAPI api, final Map<String, Collection<PlaceholderData<?>>> placeholders)
@@ -461,7 +461,7 @@ public abstract class Message
          * @param name   name of placeholder object.
          * @param object object instance used in placeholder.
          *
-         * @return new instance of {@link com.gotofinal.messages.cfg.messages.Message.MessageData}
+         * @return new instance of {@link MessageData}
          */
         public static MessageData e(final String name, final Object object)
         {

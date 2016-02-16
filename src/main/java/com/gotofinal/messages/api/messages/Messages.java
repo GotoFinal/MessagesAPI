@@ -32,6 +32,7 @@ import java.util.TreeMap;
 
 import com.gotofinal.messages.api.MessageReceiver;
 import com.gotofinal.messages.api.MessagesAPI;
+import com.gotofinal.messages.api.chat.component.BaseComponent;
 import com.gotofinal.messages.api.messages.Message.MessageData;
 
 import org.apache.commons.lang3.StringUtils;

@@ -46,7 +46,7 @@ import org.yaml.snakeyaml.Yaml;
 public interface ConfigManager
 {
     /**
-     * Load given file as object using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load given file as object using yaml configuration system. <br>
      * This method will use UTF-8 as default encoding.
      *
      * @param file file to load.
@@ -63,7 +63,7 @@ public interface ConfigManager
     }
 
     /**
-     * Load given file as object using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load given file as object using yaml configuration system. <br>
      * This method will use UTF-8 as default encoding.
      *
      * @param clazz type of object to load.
@@ -81,7 +81,7 @@ public interface ConfigManager
     }
 
     /**
-     * Save given object to given file using {@link org.diorite.cfg.system.Template} configuration system.<br>
+     * Save given object to given file using yaml configuration system.<br>
      * This method will use UTF-8 as default encoding.
      *
      * @param file   file to use, file will be created if it don't exist yet. (including directory)
@@ -95,7 +95,7 @@ public interface ConfigManager
     }
 
     /**
-     * Load given file as object using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load given file as object using yaml configuration system. <br>
      *
      * @param file    file to load.
      * @param charset charset to use.
@@ -122,7 +122,7 @@ public interface ConfigManager
     }
 
     /**
-     * Load given file as object using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load given file as object using yaml configuration system. <br>
      *
      * @param clazz   type of object to load.
      * @param file    file to load.
@@ -150,7 +150,7 @@ public interface ConfigManager
     }
 
     /**
-     * Save given object to given file using {@link org.diorite.cfg.system.Template} configuration system.<br>
+     * Save given object to given file using yaml configuration system.<br>
      *
      * @param file    file to use, file will be created if it don't exist yet. (including directory)
      * @param object  object to save using templates, template will be created if it don't exist yet.
@@ -182,7 +182,7 @@ public interface ConfigManager
 
 
     /**
-     * Load object from given {@link InputStream} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link InputStream} using yaml configuration system. <br>
      *
      * @param input   {@link InputStream} to load.
      * @param charset charset to use.
@@ -199,7 +199,7 @@ public interface ConfigManager
     }
 
     /**
-     * Load object from given {@link InputStream} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link InputStream} using yaml configuration system. <br>
      *
      * @param clazz   type of object to load.
      * @param input   {@link InputStream} to load.
@@ -217,7 +217,7 @@ public interface ConfigManager
     }
 
     /**
-     * Save given object to given {@link OutputStream} using {@link org.diorite.cfg.system.Template} configuration system.<br>
+     * Save given object to given {@link OutputStream} using yaml configuration system.<br>
      *
      * @param output  output stream to use.
      * @param object  object to save using templates, template will be created if it don't exist yet.
@@ -232,7 +232,7 @@ public interface ConfigManager
 
 
     /**
-     * Load object from given {@link InputStream} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link InputStream} using yaml configuration system. <br>
      * This method will use UTF-8 as default encoding.
      *
      * @param input {@link InputStream} to load.
@@ -249,7 +249,7 @@ public interface ConfigManager
     }
 
     /**
-     * Load object from given {@link InputStream} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link InputStream} using yaml configuration system. <br>
      * This method will use UTF-8 as default encoding.
      *
      * @param clazz type of object to load.
@@ -267,7 +267,7 @@ public interface ConfigManager
     }
 
     /**
-     * Save given object to given {@link OutputStream} using {@link org.diorite.cfg.system.Template} configuration system.<br>
+     * Save given object to given {@link OutputStream} using yaml configuration system.<br>
      * This method will use UTF-8 as default encoding.
      *
      * @param output output stream to use.
@@ -289,7 +289,7 @@ public interface ConfigManager
     Yaml getYaml();
 
     /**
-     * Load object from given {@link Reader} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link Reader} using yaml configuration system. <br>
      *
      * @param reader {@link Reader} to use.
      * @param <T>    type of returned object.
@@ -302,7 +302,7 @@ public interface ConfigManager
     <T> T load(Reader reader) throws IOException, InvalidConfigurationException;
 
     /**
-     * Load object from given {@link Reader} using {@link org.diorite.cfg.system.Template} configuration system. <br>
+     * Load object from given {@link Reader} using yaml configuration system. <br>
      *
      * @param clazz  type of object to load.
      * @param reader {@link Reader} to use.
@@ -316,7 +316,7 @@ public interface ConfigManager
     <T> T load(Class<T> clazz, Reader reader) throws IOException, InvalidConfigurationException;
 
     /**
-     * Save given object to given {@link Writer} using {@link org.diorite.cfg.system.Template} configuration system.<br>
+     * Save given object to given {@link Writer} using yaml configuration system.<br>
      *
      * @param writer {@link Writer} to use.
      * @param object object to save using templates, template will be created if it don't exist yet.

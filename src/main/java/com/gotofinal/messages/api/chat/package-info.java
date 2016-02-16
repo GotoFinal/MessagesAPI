@@ -23,6 +23,6 @@
  */
 
 /**
- * Contains anything related to chat, like {@link com.gotofinal.messages.chat.ChatColor} enum or json messages API, or placeholder system.
+ * Contains anything related to chat, like {@link com.gotofinal.messages.api.chat.ChatColor} enum or json messages API, or placeholder system.
  */
 package com.gotofinal.messages.api.chat;

@@ -41,7 +41,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Represent type of placeholder, like {@link Player} for player.name. <br>
+ * Represent type of placeholder, like Player for player.name. <br>
  * <br>
  * Class contains also public static instances of basic types.
  *
@@ -56,7 +56,6 @@ public class PlaceholderType<T>
      * {@link Object} placeholder type, used by simple placeholders without any type, like just "points" instead of some object like "player.points"
      */
     public static final PlaceholderType<Object> OBJECT = create("", Object.class);
-
 
     static
     {
@@ -186,7 +185,7 @@ public class PlaceholderType<T>
      *
      * @param type type of placeholder, like that "player" in player.name.
      * @param id   id/name of placeholder, like that "name" in player.name.
-     * @param func function that should return {@link String} or {@link com.gotofinal.messages.chat.component.BaseComponent}, when using BaseComponent you may add click events, hovers events and all that stuff.
+     * @param func function that should return {@link String} or {@link BaseComponent}, when using BaseComponent you may add click events, hovers events and all that stuff.
      *
      * @return Created placeholder.
      */
@@ -201,7 +200,7 @@ public class PlaceholderType<T>
      * Register new placeholder item to this placeholder type.
      *
      * @param id   id/name of placeholder, like that "name" in player.name.
-     * @param func function that should return {@link String} or {@link com.gotofinal.messages.chat.component.BaseComponent}, when using BaseComponent you may add click events, hovers events and all that stuff.
+     * @param func function that should return {@link String} or {@link BaseComponent}, when using BaseComponent you may add click events, hovers events and all that stuff.
      *
      * @return Created placeholder.
      */
@@ -292,7 +291,7 @@ public class PlaceholderType<T>
     }
 
     /**
-     * Returns class type of this type, like {@link Player} for player.name.
+     * Returns class type of this type, like Player for player.name.
      *
      * @return class type of this type.
      */

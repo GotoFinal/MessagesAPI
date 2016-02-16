@@ -203,6 +203,7 @@ public interface PlaceholderData<T>
      * Get collectiona of used placeholders grouped by object name in given string. <br>
      * Will return null if null string is given.
      *
+     * @param api  instance of api.
      * @param str  string to parse.
      * @param warn if true, method will print warnings about invalid placeholders to console.
      *

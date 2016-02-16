@@ -154,7 +154,7 @@ public class ComponentSerializer implements JsonDeserializer<BaseComponent>
      * If json isn't valid json, {@link TextComponent} with given string will be returned. {@link TextComponent#fromLegacyText(String)}
      *
      * @param json      json to parse.
-     * @param colorChar {@link com.gotofinal.messages.chat.ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
+     * @param colorChar {@link ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
      *
      * @return parsed base component.
      */
@@ -187,7 +187,7 @@ public class ComponentSerializer implements JsonDeserializer<BaseComponent>
      * If json isn't valid json, {@link TextComponent} with given string will be returned. {@link TextComponent#fromLegacyText(String)}
      *
      * @param jsons     json arrays to parse.
-     * @param colorChar {@link com.gotofinal.messages.chat.ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
+     * @param colorChar {@link ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
      *
      * @return parsed base component.
      */
@@ -206,7 +206,7 @@ public class ComponentSerializer implements JsonDeserializer<BaseComponent>
      * If json isn't valid json, {@link TextComponent} with given string will be returned. {@link TextComponent#fromLegacyText(String)}
      *
      * @param json      json to parse.
-     * @param colorChar {@link com.gotofinal.messages.chat.ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
+     * @param colorChar {@link ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
      *
      * @return parsed base component.
      */
@@ -239,7 +239,7 @@ public class ComponentSerializer implements JsonDeserializer<BaseComponent>
      * If json isn't valid json, {@link TextComponent} with given string will be returned. {@link TextComponent#fromLegacyText(String)}
      *
      * @param jsons     json arrays to parse.
-     * @param colorChar {@link com.gotofinal.messages.chat.ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
+     * @param colorChar {@link ChatColor#translateAlternateColorCodes(char, String)}, use null to skip.
      *
      * @return parsed base component.
      */
