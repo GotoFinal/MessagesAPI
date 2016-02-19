@@ -523,7 +523,7 @@ public abstract class Message
                 msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
                 map.put(defaultLanguage, msgMap);
             }
-            msgMap.put(node, this.msg.canBeLegacy() ? this.msg.toLegacyText() : ComponentSerializer.toString(this.msg));
+            msgMap.put(node, this.msg.canBeLegacy() ? ChatColor.removeColorCodesInString('&', this.msg.toLegacyText()) : ComponentSerializer.toString(this.msg));
             return map;
         }
 
@@ -841,7 +841,7 @@ public abstract class Message
                 msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
                 map.put(locale, msgMap);
             }
-            msgMap.put(node, msg.canBeLegacy() ? msg.toLegacyText() : ComponentSerializer.toString(msg));
+            msgMap.put(node, msg.canBeLegacy() ? ChatColor.removeColorCodesInString('&', msg.toLegacyText()) : ComponentSerializer.toString(msg));
         }
         return map;
     }
