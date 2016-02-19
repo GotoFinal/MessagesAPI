@@ -370,6 +370,10 @@ public class MessageLoader
 
     private DataTree toTree(final Locale locale, final String node, final Map<?, ?> map, final DataTree tree)
     {
+        if (map == null)
+        {
+            return tree;
+        }
         for (final Entry<?, ?> entry : map.entrySet())
         {
             final String key = entry.getKey().toString();

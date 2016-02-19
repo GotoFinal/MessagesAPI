@@ -250,7 +250,7 @@ public interface PlaceholderData<T>
                 String fullName = "$<";
                 {
                     final String type = simple ? "" : string.substring(0, index);
-                    index = type.indexOf('#');
+                    index = type.indexOf(':');
                     if (index == - 1)
                     {
                         fullName += type;
@@ -261,7 +261,7 @@ public interface PlaceholderData<T>
                     {
                         typeID = type.substring(0, index);
                         typeName = type.substring(index + 1);
-                        fullName += typeID + "#" + typeName;
+                        fullName += typeID + ":" + typeName;
                     }
                 }
                 fullName += (simple ? "" : ".") + value + ">";
@@ -303,7 +303,7 @@ public interface PlaceholderData<T>
                 }
                 key = null;
             }
-            else if (((c >= '0') && (c <= '9')) || ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')) || (c == '_') || (c == '.'))
+            else if (((c >= '0') && (c <= '9')) || ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')) || (c == '_') || (c == '.') || (c == ':'))
             {
                 key.append(c);
             }
