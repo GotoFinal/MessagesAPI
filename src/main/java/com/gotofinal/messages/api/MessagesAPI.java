@@ -40,6 +40,20 @@ public interface MessagesAPI
     void setReceiverConverter(ReceiverConverter<?> receiverConverter);
 
     /**
+     * Returns broadcast receiver for this API.
+     *
+     * @return broadcast receiver for this API.
+     */
+    BroadcastReceiver getBroadcastReceiver();
+
+    /**
+     * Sets broadcast receiver for this API.
+     *
+     * @param receiver new broadcast receiver for this API.
+     */
+    void setBroadcastReceiver(BroadcastReceiver receiver);
+
+    /**
      * Returns languages supported by this api instance.
      *
      * @return languages supported by this api instance.

@@ -26,6 +26,7 @@ package com.gotofinal.messages.api.messages;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -146,6 +147,10 @@ public abstract class Message
      */
     static Message load(final MessagesAPI api, final Object object)
     {
+        if ((object instanceof Boolean) && ! ((Boolean) object))
+        {
+            return new DisabledMessage(api);
+        }
         if (object instanceof String)
         {
             return new SimpleMessage(api, (String) object);
@@ -191,76 +196,37 @@ public abstract class Message
      */
     public abstract Map<Locale, Map<String, Object>> toMap(Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node);
 
-//    /**
-//     * Get BaseComponent to send, may return null if message is disabled.
-//     *
-//     * @param lang   language to use if possible.
-//     * @param name   name of first placeholder object to use.
-//     * @param object instance of first placeholder object to use.
-//     *
-//     * @return BaseComponent to send or null if disabled.
-//     */
-//    public BaseComponent get(final Locale lang, final String name, final Object object)
-//    {
-//        return this.get(lang, new MessageData(name, object));
-//    }
-//
-//    /**
-//     * Get BaseComponent to send, may return null if message is disabled.
-//     *
-//     * @param lang    language to use if possible.
-//     * @param name1   name of first placeholder object to use.
-//     * @param object1 instance of first placeholder object to use.
-//     * @param name2   name of second placeholder object to use.
-//     * @param object2 instance of second placeholder object to use.
-//     *
-//     * @return BaseComponent to send or null if disabled.
-//     */
-//    public BaseComponent get(final Locale lang, final String name1, final Object object1, final String name2, final Object object2)
-//    {
-//        return this.get(lang, new MessageData(name1, object1), new MessageData(name2, object2));
-//    }
-//
-//    /**
-//     * Get BaseComponent to send, may return null if message is disabled.
-//     *
-//     * @param lang    language to use if possible.
-//     * @param name1   name of first placeholder object to use.
-//     * @param object1 instance of first placeholder object to use.
-//     * @param name2   name of second placeholder object to use.
-//     * @param object2 instance of second placeholder object to use.
-//     * @param name3   name of third placeholder object to use.
-//     * @param object3 instance of third placeholder object to use.
-//     *
-//     * @return BaseComponent to send or null if disabled.
-//     */
-//    public BaseComponent get(final Locale lang, final String name1, final Object object1, final String name2, final Object object2, final String name3, final Object object3)
-//    {
-//        return this.get(lang, new MessageData(name1, object1), new MessageData(name2, object2), new MessageData(name3, object3));
-//    }
-//
-//    /**
-//     * Get BaseComponent to send, may return null if message is disabled.
-//     *
-//     * @param lang    language to use if possible.
-//     * @param names   array of names of placeholders objects to use.
-//     * @param objects array of instances of placeholders objects to use.
-//     *
-//     * @return BaseComponent to send or null if disabled.
-//     */
-//    public BaseComponent get(final Locale lang, final String[] names, final Object... objects)
-//    {
-//        if (names.length != objects.length)
-//        {
-//            throw new IllegalArgumentException();
-//        }
-//        final MessageData[] data = new MessageData[names.length];
-//        for (int i = 0; i < names.length; i++)
-//        {
-//            data[i] = new MessageData(names[i], objects[i]);
-//        }
-//        return this.get(lang, data);
-//    }
+    /**
+     * Returns true if this message is enabled.
+     * @return true if this message is enabled.
+     */
+    public boolean isEnabled()
+    {
+        return true;
+    }
+
+    /**
+     * Final send message method, called from evey other method.
+     *
+     * @param target    target of message.
+     * @param lang      language to use if possible.
+     * @param component ready to send component.
+     *
+     * @return true if message was send.
+     */
+    public boolean handleMessage(final MessageReceiver target, final Locale lang, final BaseComponent component)
+    {
+        if (! this.isEnabled())
+        {
+            return false;
+        }
+        if (component == null)
+        {
+            return false;
+        }
+        target.sendMessage(component);
+        return true;
+    }
 
     /**
      * Try send this message to given {@link MessageReceiver}, if message is disabled method will just return false.
@@ -274,12 +240,7 @@ public abstract class Message
     public boolean sendMessage(final MessageReceiver target, final Locale lang, final MessageData... data)
     {
         final BaseComponent msg = this.get(lang, data);
-        if (msg == null)
-        {
-            return false;
-        }
-        target.sendMessage(msg);
-        return true;
+        return this.handleMessage(target, lang, msg);
     }
 
     /**
@@ -292,13 +253,7 @@ public abstract class Message
      */
     public boolean sendMessage(final MessageReceiver target, final MessageData... data)
     {
-        final BaseComponent msg = this.get(target.getPreferredLocale(), data);
-        if (msg == null)
-        {
-            return false;
-        }
-        target.sendMessage(msg);
-        return true;
+        return this.sendMessage(target, target.getPreferredLocale(), data);
     }
 
     /**
@@ -312,12 +267,7 @@ public abstract class Message
     public boolean broadcastStaticMessage(final Locale lang, final MessageData... data)
     {
         final BaseComponent msg = this.get(lang, data);
-        if (msg == null)
-        {
-            return false;
-        }
-        this.api.broadcastMessage(msg);
-        return true;
+        return this.handleMessage(this.api.getBroadcastReceiver(), lang, msg);
     }
 
     /**
@@ -336,7 +286,7 @@ public abstract class Message
         {
             return false;
         }
-        targets.forEach(s -> s.sendMessage(msg));
+        targets.forEach(s -> this.handleMessage(s, lang, msg));
         return true;
     }
 
@@ -403,8 +353,10 @@ public abstract class Message
                     continue;
                 }
             }
-            target.sendMessage(msg);
-            anyMsgSent = true;
+            if (this.handleMessage(target, lang, msg))
+            {
+                anyMsgSent = true;
+            }
         }
         return anyMsgSent;
     }
@@ -492,6 +444,45 @@ public abstract class Message
             }
         }
         return component;
+    }
+
+    private static class DisabledMessage extends Message
+    {
+        DisabledMessage(final MessagesAPI api)
+        {
+            super(api, Collections.emptyMap());
+        }
+
+        @Override
+        public boolean isEnabled()
+        {
+            return false;
+        }
+
+        @Override
+        public BaseComponent get(final Locale lang, final MessageData... data)
+        {
+            return null;
+        }
+
+        @Override
+        public Map<Locale, Map<String, Object>> toMap(final Map<Locale, Map<String, Object>> map, final Locale defaultLanguage, final String node)
+        {
+            Map<String, Object> msgMap = map.get(defaultLanguage);
+            if (msgMap == null)
+            {
+                msgMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                map.put(defaultLanguage, msgMap);
+            }
+            msgMap.put(node, false);
+            return map;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "false";
+        }
     }
 
     private static class SimpleMessage extends Message

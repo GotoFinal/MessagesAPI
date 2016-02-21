@@ -2,6 +2,7 @@ package com.gotofinal.messages;
 
 import java.util.Locale;
 
+import com.gotofinal.messages.api.BroadcastReceiver;
 import com.gotofinal.messages.api.MessagesAPI;
 import com.gotofinal.messages.api.messages.MessageLoader;
 
@@ -10,7 +11,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public abstract class BaseMessagesAPI implements MessagesAPI
 {
-    protected final MessageLoader loader = new MessageLoader(this);
+    protected final MessageLoader     loader            = new MessageLoader(this);
+    protected       BroadcastReceiver broadcastReceiver = new BroadcastReceiver(this);
 
     protected Locale[] locales;
 
@@ -26,11 +28,6 @@ public abstract class BaseMessagesAPI implements MessagesAPI
         }
     }
 
-    /**
-     * Returns languages supported by this api instance.
-     *
-     * @return languages supported by this api instance.
-     */
     @Override
     public Locale[] getLanguages()
     {
@@ -47,11 +44,18 @@ public abstract class BaseMessagesAPI implements MessagesAPI
         this.locales = locales;
     }
 
-    /**
-     * Returns message loader for this api instance.
-     *
-     * @return message loader for this api instance.
-     */
+    @Override
+    public BroadcastReceiver getBroadcastReceiver()
+    {
+        return this.broadcastReceiver;
+    }
+
+    @Override
+    public void setBroadcastReceiver(final BroadcastReceiver receiver)
+    {
+        this.broadcastReceiver = receiver;
+    }
+
     @Override
     public MessageLoader getMessageLoader()
     {
